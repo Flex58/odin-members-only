@@ -8,7 +8,14 @@ const formValidation = [
     .notEmpty()
     .withMessage("Email is required")
     .isEmail()
-    .withMessage("Must be an Email address"),
+    .withMessage("Must be an Email address")
+    .custom(async (req) => {
+      const data = await db.getUserByName(req.body.username);
+      if (data) {
+        throw new Error("Email already in use");
+      }
+    })
+    .withMessage("Email already in use"),
   body("password")
     .notEmpty()
     .withMessage("Password is required")
@@ -31,4 +38,22 @@ const formValidation = [
     .withMessage("Contains Invalid Characters") //should verify Names in all locales
     .isLength({ max: 100 })
     .withMessage("Last Name must be under 100 characters"),
+];
+
+exports.postSignUp = [
+  formValidation,
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("sign-up", {
+        errors: errors.array(),
+        username: req.username,
+        first: req.first_name,
+        last: req.last_name,
+      });
+    }
+    const data = matchedData(req);
+    await db.addUser(data);
+    await res.redirect("/");
+  },
 ];
