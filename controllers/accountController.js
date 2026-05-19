@@ -1,3 +1,4 @@
+const passport = require("passport");
 const db = require("../db/queries");
 
 const { body, validationResult, matchedData } = require("express-validator");
@@ -9,8 +10,8 @@ const formValidation = [
     .withMessage("Email is required")
     .isEmail()
     .withMessage("Must be an Email address")
-    .custom(async (req) => {
-      const data = await db.getUserByName(req.body.username);
+    .custom(async (value) => {
+      const data = await db.getUserByName(value);
       if (data) {
         throw new Error("Email already in use");
       }
@@ -40,6 +41,10 @@ const formValidation = [
     .withMessage("Last Name must be under 100 characters"),
 ];
 
+exports.getSignUp = (req, res) => {
+  res.render("sign-up");
+};
+
 exports.postSignUp = [
   formValidation,
   async (req, res) => {
@@ -47,13 +52,32 @@ exports.postSignUp = [
     if (!errors.isEmpty()) {
       return res.status(400).render("sign-up", {
         errors: errors.array(),
-        username: req.username,
-        first: req.first_name,
-        last: req.last_name,
+        username: req.body.username,
+        first: req.body.first_name,
+        last: req.body.last_name,
       });
     }
     const data = matchedData(req);
-    await db.addUser(data);
-    await res.redirect("/");
+    const hashedPassowrd = await bcrypt.hash(data.password, 10);
+    try {
+      await db.addUser(
+        data.username,
+        hashedPassowrd,
+        data.first_name,
+        data.last_name,
+      );
+      res.redirect("/");
+    } catch (err) {
+      return next(err);
+    }
   },
 ];
+
+exports.getSignIn = (req, res) => {
+  res.render("sign-in");
+};
+
+exports.postSignIn = passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/account/sign-in",
+});
