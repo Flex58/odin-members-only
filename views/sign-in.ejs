@@ -13,7 +13,8 @@
 		<form action="">
 			<div>
 				<label for="username">Email: </label>
-				<input type="email" name="username" id="username">
+				<input type="email" name="username" id="username" 
+							value="<%= locals.username || ''%>">
 			</div>
 			<div>
 				<label for="password">Password: </label>

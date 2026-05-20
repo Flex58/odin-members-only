@@ -80,4 +80,5 @@ exports.getSignIn = (req, res) => {
 exports.postSignIn = passport.authenticate("local", {
   successRedirect: "/",
   failureRedirect: "/account/sign-in",
+  failureMessage: true,
 });
