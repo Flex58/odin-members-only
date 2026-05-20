@@ -7,7 +7,10 @@
 </head>
 <body>
 		<% if (currentUser) {%>
-		<h1>WELCOME BACK <%= currentUser.first_name %></h1>
+		<div>
+			<h1>WELCOME BACK <%= currentUser.first_name %></h1>
+			<a href="/account/sign-out"><button>Log Out</button></a>
+		</div>
 	  <!-- Create New Message -->	
 		<% } else {%>
 			<a href="/account/sign-in"><Button>Log-in</Button></a>

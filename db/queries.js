@@ -1,7 +1,7 @@
 const pool = require("./pool.js");
 
 exports.getUserByName = async (name) => {
-  const { rows } = await pool.query("SELECT * FROM users WWHERE username= $1", [
+  const { rows } = await pool.query("SELECT * FROM users WHERE username= $1", [
     name,
   ]);
   return rows[0];
@@ -14,8 +14,8 @@ exports.getUserById = async (id) => {
 
 exports.addUser = async (username, password, first, last = null) => {
   await pool.query(
-    `INSERT INTO users (username = $1, password = $2, 
-												first_name = $3, last_name = $4)`,
+    `INSERT INTO users (username, password, 
+		 first_name, last_name) VALUES ($1, $2, $3, $4)`,
     [username, password, first, last],
   );
 };

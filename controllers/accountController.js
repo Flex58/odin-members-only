@@ -1,6 +1,6 @@
 const passport = require("passport");
 const db = require("../db/queries");
-
+const bcrypt = require("bcryptjs");
 const { body, validationResult, matchedData } = require("express-validator");
 
 const formValidation = [
@@ -13,14 +13,19 @@ const formValidation = [
     .custom(async (value) => {
       const data = await db.getUserByName(value);
       if (data) {
-        throw new Error("Email already in use");
+        throw new Error(`Email already in use`);
       }
     })
     .withMessage("Email already in use"),
   body("password")
     .notEmpty()
     .withMessage("Password is required")
-    .isStrongPassword({ minLength: 8, minUppercase: 1, minNumbers: 1 })
+    .isStrongPassword({
+      minLength: 8,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 0,
+    })
     .withMessage(
       `Password must be at least 8 characters long, have 1 uppercase character and include at least 1 number`,
     ),
@@ -47,7 +52,7 @@ exports.getSignUp = (req, res) => {
 
 exports.postSignUp = [
   formValidation,
-  async (req, res) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).render("sign-up", {
@@ -74,7 +79,7 @@ exports.postSignUp = [
 ];
 
 exports.getSignIn = (req, res) => {
-  res.render("sign-in");
+  res.render("sign-in", { message: req.session.message || null });
 };
 
 exports.postSignIn = passport.authenticate("local", {
@@ -82,3 +87,12 @@ exports.postSignIn = passport.authenticate("local", {
   failureRedirect: "/account/sign-in",
   failureMessage: true,
 });
+
+exports.getSignOut = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+};

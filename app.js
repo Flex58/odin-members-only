@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("node:path");
 const passport = require("passport");
 const session = require("./config/session.js");
+const { accountRouter } = require("./routers/accountRouter.js");
 require("dotenv").config();
 
 //passport middleware
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/account", accountRouter);
 app.get("/", (req, res) => {
   res.render("index");
 });

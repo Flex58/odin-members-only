@@ -7,10 +7,10 @@
 </head>
 <body>
 	<h1>Sign In</h1>	
-		<% if(req.session.message) { %>
-			<p><% req.session.message %></p>
+		<% if(message) { %>
+			<p><%= message %></p>
 		<% } %>
-		<form action="">
+		<form action="/account/sign-in" method="post">
 			<div>
 				<label for="username">Email: </label>
 				<input type="email" name="username" id="username" 
