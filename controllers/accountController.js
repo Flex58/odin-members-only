@@ -29,6 +29,15 @@ const formValidation = [
     .withMessage(
       `Password must be at least 8 characters long, have 1 uppercase character and include at least 1 number`,
     ),
+  body("confirm")
+    .notEmpty()
+    .withMessage("Password doesn't match")
+    .custom(async (confirm, { req }) => {
+      if (confirm !== req.body.password) {
+        throw new Error("Password doesn't match");
+      }
+    })
+    .withMessage("Password doesn't match"),
   body("first_name")
     .trim()
     .notEmpty()
