@@ -9,5 +9,7 @@ accountRouter.post("/sign-up", accountController.postSignUp);
 accountRouter.get("/sign-in", accountController.getSignIn);
 accountRouter.post("/sign-in", accountController.postSignIn);
 accountRouter.get("/sign-out", accountController.getSignOut);
+accountRouter.get("/member", accountController.getMember);
+accountRouter.post("/member", accountController.postMember);
 
 module.exports = { accountRouter };

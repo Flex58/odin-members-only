@@ -2,6 +2,7 @@ const passport = require("passport");
 const db = require("../db/queries");
 const bcrypt = require("bcryptjs");
 const { body, validationResult, matchedData } = require("express-validator");
+require("dotenv").config();
 
 const formValidation = [
   body("username")
@@ -104,4 +105,24 @@ exports.getSignOut = (req, res, next) => {
     }
     res.redirect("/");
   });
+};
+
+exports.getMember = (req, res) => {
+  res.render("member");
+};
+
+exports.postMember = async (req, res) => {
+  const memberPass = process.env.MEMBER_PASSWORD;
+  const adminPass = process.env.ADMIN_PASSWORD;
+  const pass = req.body.password;
+
+  if (bcrypt.compareSync(pass, memberPass)) {
+    await db.setMember(req.user.id);
+    res.redirect("/");
+  } else if (bcrypt.compareSync(pass, adminPass)) {
+    await db.setAdmin(req.user.id);
+    res.redirect("/");
+  } else {
+    res.render("member", { errors: "Member Password incorrect" });
+  }
 };

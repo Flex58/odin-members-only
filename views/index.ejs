@@ -8,7 +8,8 @@
 <body>
 		<% if (currentUser) {%>
 		<div>
-			<h1>WELCOME BACK <%= currentUser.first_name %></h1>
+			<h1>WELCOME BACK <%= currentUser.first_name %> </h1>
+			<a href="/account/member"><button>Become a Member</button></a>
 			<a href="/account/sign-out"><button>Log Out</button></a>
 		</div>
 	  <!-- Create New Message -->	
