@@ -8,10 +8,27 @@
 <body>
 		<% if (currentUser) {%>
 		<div>
-			<h1>WELCOME BACK <%= currentUser.first_name %> </h1>
+			<h1>Welcome Back 
+				<% if (currentUser.admin) {  %> 
+					Admin
+				<% } else if (currentUser.member) { %> 
+				  Member 
+				<% } %>
+				<%= currentUser.first_name %> </h1>
 			<a href="/account/member"><button>Become a Member</button></a>
 			<a href="/account/sign-out"><button>Log Out</button></a>
 		</div>
+		<form action="/messages/post" method="post">
+			<div>
+				<label for="title">Title</label>
+				<input type="text" name="title" id="title">
+			</div>
+			<div>
+				<label for="message">Message</label>
+				<textarea name="message" id="message" rows="5" cols="30"> </textarea>
+			</div>
+			<button>Post Message</button>
+		</form>
 	  <!-- Create New Message -->	
 		<% } else {%>
 			<a href="/account/sign-in"><Button>Log-in</Button></a>
