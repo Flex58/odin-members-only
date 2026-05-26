@@ -27,3 +27,11 @@ exports.setMember = async (id) => {
 exports.setAdmin = async (id) => {
   await pool.query("UPDATE users SET admin= true WHERE id= $1", [id]);
 };
+
+exports.addMessage = async (id, title, content) => {
+  await pool.query(
+    `INSERT INTO messages (author, title, content, time)
+		 VALUES ($1, $2, $3, CURRENT_TIMESTAMP(0))`,
+    [id, title, content],
+  );
+};
