@@ -20,7 +20,7 @@ exports.postMessage = [
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).render("/", {
+      return res.status(400).render("index", {
         errors: errors.array(),
         title: req.body.title,
         content: req.body.content,
