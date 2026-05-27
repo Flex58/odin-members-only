@@ -35,3 +35,12 @@ exports.addMessage = async (id, title, content) => {
     [id, title, content],
   );
 };
+
+exports.getMessage = async () => {
+  const { rows } = await pool.query(`SELECT * FROM messages`);
+  return rows;
+};
+
+exports.deleteMessage = async (id) => {
+  await pool.query("DELETE FROM messages WHERE id = $1", [id]);
+};

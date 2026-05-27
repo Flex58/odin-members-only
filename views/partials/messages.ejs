@@ -1,0 +1,36 @@
+<div>
+  <% messages.forEach(function(msg) { %>
+	<div id='<%= msg.id %>'>
+		<h3><%= msg.title %></h3>
+		<p><%= msg.content %></p>
+		<% if(currentUser) { %>
+			<div>
+				<p>
+				Date: <% if(currentUser.member || currentUser.admin){ %>
+				 <%= msg.time %> 
+				<% } else { %> 
+				 anon 
+				<% } %>
+			</p>
+			<p>
+				Author: <% if(currentUser.member || currentUser.admin){ %>
+				 <%= msg.author %> 
+				<% } else { %> 
+				 anon 
+				<% } %>
+			</p>
+		 </div>
+			<% if(currentUser.admin) { %>
+				<form action="/messages/<%= msg.id %>/delete" method="post">
+					<button type="submit">Delete Post</button>
+				</form>
+			<% } %>
+		<% } else { %>
+			<div>
+					<p>Date: anon</p>
+					<p>Author: anon</p>
+			</div>
+		<% } %>
+	</div>
+  <% }); %>
+</div>
